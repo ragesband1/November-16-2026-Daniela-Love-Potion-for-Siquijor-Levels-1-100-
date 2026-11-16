@@ -1,0 +1,1124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Daniela Love Potion for Siquijor (Levels 1–100)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-deep: #0b0618;
+      --card-glass: rgba(26, 15, 48, 0.78);
+      --accent-pink: #ff3e9d;
+      --accent-purple: #9d4edd;
+      --accent-cyan: #00f5d4;
+      --accent-gold: #ffd166;
+    }
+
+    * {
+      box-sizing: border-box;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background: radial-gradient(circle at 20% 20%, #240b4c 0%, #100726 48%, #070312 100%);
+      color: #f8f5ff;
+      overflow-x: hidden;
+    }
+
+    .font-mystic {
+      font-family: 'Cinzel Decorative', cursive;
+    }
+
+    /* Ambient Starfield & Floating Fireflies */
+    .firefly {
+      position: fixed;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: radial-gradient(circle, #ffd166 0%, rgba(255, 209, 102, 0) 70%);
+      pointer-events: none;
+      animation: floatFirefly linear infinite;
+      z-index: 0;
+    }
+
+    @keyframes floatFirefly {
+      0% { transform: translateY(100vh) translateX(0) scale(0.6); opacity: 0; }
+      20% { opacity: 0.9; }
+      80% { opacity: 0.8; }
+      100% { transform: translateY(-10vh) translateX(40px) scale(1.2); opacity: 0; }
+    }
+
+    /* Glass Panels */
+    .glass-panel {
+      background: var(--card-glass);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      box-shadow: 0 12px 35px rgba(0, 0, 0, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+    }
+
+    /* 2D Potion Bottle Styling */
+    .bottle-wrapper {
+      position: relative;
+      width: 170px;
+      height: 230px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-end;
+      filter: drop-shadow(0 0 22px rgba(255, 62, 157, 0.35));
+      transition: transform 0.25s ease;
+    }
+
+    .bottle-wrapper.pulse-brew {
+      animation: brewPop 0.35s ease;
+    }
+
+    @keyframes brewPop {
+      0% { transform: scale(1); }
+      45% { transform: scale(1.08) rotate(-2deg); }
+      100% { transform: scale(1) rotate(0deg); }
+    }
+
+    .bottle-cork {
+      width: 44px;
+      height: 24px;
+      background: linear-gradient(90deg, #8d5524, #c68642, #8d5524);
+      border-radius: 6px 6px 2px 2px;
+      border: 2px solid #5c3310;
+      z-index: 3;
+      margin-bottom: -3px;
+    }
+
+    .bottle-neck {
+      width: 56px;
+      height: 36px;
+      background: rgba(255, 255, 255, 0.15);
+      border-left: 3px solid rgba(255, 255, 255, 0.55);
+      border-right: 3px solid rgba(255, 255, 255, 0.55);
+      border-top: 3px solid rgba(255, 255, 255, 0.65);
+      border-radius: 6px 6px 0 0;
+      position: relative;
+      z-index: 2;
+    }
+
+    .bottle-body {
+      width: 154px;
+      height: 162px;
+      border-radius: 46% 46% 42% 42% / 44% 44% 48% 48%;
+      background: rgba(255, 255, 255, 0.1);
+      border: 3px solid rgba(255, 255, 255, 0.6);
+      position: relative;
+      overflow: hidden;
+      box-shadow: inset 0 0 25px rgba(255, 255, 255, 0.25);
+    }
+
+    /* Gloss highlight on glass */
+    .bottle-body::after {
+      content: '';
+      position: absolute;
+      top: 14px;
+      left: 16px;
+      width: 22px;
+      height: 75px;
+      border-radius: 50%;
+      background: linear-gradient(180deg, rgba(255,255,255,0.65) 0%, rgba(255,255,255,0) 100%);
+      transform: rotate(-18deg);
+      pointer-events: none;
+      z-index: 4;
+    }
+
+    /* Liquid Fill Inside Bottle */
+    .potion-liquid {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 0%;
+      background: linear-gradient(180deg, #ff70b8 0%, #ff1e8a 55%, #7b2cbf 100%);
+      transition: height 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), background 0.5s ease;
+      z-index: 1;
+    }
+
+    .potion-liquid::before {
+      content: '';
+      position: absolute;
+      top: -8px;
+      left: -25%;
+      width: 150%;
+      height: 16px;
+      background: rgba(255, 255, 255, 0.35);
+      border-radius: 50%;
+      animation: waveSurface 2.4s ease-in-out infinite;
+    }
+
+    @keyframes waveSurface {
+      0%, 100% { transform: translateX(-6%) scaleY(0.9); }
+      50% { transform: translateX(6%) scaleY(1.15); }
+    }
+
+    .bubble {
+      position: absolute;
+      bottom: 8px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.65);
+      animation: riseBubble 1.8s ease-in infinite;
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    @keyframes riseBubble {
+      0% { transform: translateY(0) scale(0.5); opacity: 0.9; }
+      100% { transform: translateY(-130px) scale(1.2); opacity: 0; }
+    }
+
+    /* Screen Shake & Penalty Animation */
+    .shake-error {
+      animation: shakeAnim 0.45s cubic-bezier(.36,.07,.19,.97) both;
+    }
+
+    @keyframes shakeAnim {
+      10%, 90% { transform: translate3d(-4px, 0, 0); }
+      20%, 80% { transform: translate3d(6px, 0, 0); }
+      30%, 50%, 70% { transform: translate3d(-8px, 0, 0); }
+      40%, 60% { transform: translate3d(8px, 0, 0); }
+    }
+
+    .floating-alert {
+      position: fixed;
+      top: 42%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-weight: 900;
+      font-size: 2rem;
+      pointer-events: none;
+      z-index: 60;
+      text-shadow: 0 4px 18px rgba(0, 0, 0, 0.85);
+      animation: floatAlertUp 1.05s ease-out forwards;
+    }
+
+    @keyframes floatAlertUp {
+      0% { opacity: 0; transform: translate(-50%, -20%) scale(0.7); }
+      20% { opacity: 1; transform: translate(-50%, -50%) scale(1.12); }
+      100% { opacity: 0; transform: translate(-50%, -135%) scale(0.95); }
+    }
+
+    /* Ingredient Card Button */
+    .ingredient-btn {
+      background: linear-gradient(145deg, rgba(44, 24, 82, 0.9), rgba(24, 12, 46, 0.95));
+      border: 1.5px solid rgba(255, 255, 255, 0.16);
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.35);
+      transition: transform 0.14s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .ingredient-btn:hover:not(:disabled) {
+      transform: translateY(-3px) scale(1.02);
+      border-color: #ff3e9d;
+      box-shadow: 0 8px 20px rgba(255, 62, 157, 0.35);
+    }
+
+    .ingredient-btn:active:not(:disabled) {
+      transform: scale(0.95);
+    }
+
+    /* Custom Scrollbar for Roster */
+    ::-webkit-scrollbar {
+      width: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: rgba(15, 8, 32, 0.6);
+      border-radius: 10px;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: linear-gradient(180deg, #ff3e9d, #9d4edd);
+      border-radius: 10px;
+    }
+  </style>
+</head>
+<body class="relative flex flex-col items-center justify-between p-3 sm:p-5">
+
+  <!-- Ambient Fireflies Container -->
+  <div id="fireflies-container"></div>
+
+  <!-- TOP HEADER BAR -->
+  <header class="w-full max-w-5xl glass-panel rounded-2xl p-3 sm:p-4 mb-3 z-10 flex flex-wrap items-center justify-between gap-3">
+    <div class="flex items-center gap-3">
+      <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-pink-500 via-purple-600 to-cyan-400 flex items-center justify-center text-2xl shadow-lg">
+        🧪
+      </div>
+      <div>
+        <h1 class="font-mystic text-base sm:text-xl font-black tracking-wide bg-gradient-to-r from-pink-300 via-amber-200 to-cyan-300 bg-clip-text text-transparent">
+          Daniela Love Potion for Siquijor
+        </h1>
+        <p class="text-xs text-purple-200/80">
+          Level 1–100 Consensual Polyamory Gayuma Brewing
+        </p>
+      </div>
+    </div>
+
+    <!-- HUD Metrics -->
+    <div class="flex flex-wrap items-center gap-2 sm:gap-4">
+      <!-- Level Badge -->
+      <div class="px-3 py-1.5 rounded-xl bg-purple-950/80 border border-purple-400/30 text-center">
+        <div class="text-[10px] uppercase tracking-wider text-purple-300">Level</div>
+        <div class="text-sm sm:text-base font-extrabold text-amber-300">
+          <span id="hud-level">1</span> <span class="text-xs text-purple-300 font-normal">/ 100</span>
+        </div>
+      </div>
+
+      <!-- Consensual Polyamory Count -->
+      <button onclick="openRosterModal()" class="px-3 py-1.5 rounded-xl bg-pink-950/80 hover:bg-pink-900/80 border border-pink-400/40 text-center transition cursor-pointer" title="View Consensual Polyamory Partners">
+        <div class="text-[10px] uppercase tracking-wider text-pink-200">Consensual Partners</div>
+        <div class="text-sm sm:text-base font-extrabold text-pink-300">
+          💞 <span id="hud-partners">0</span> / 100
+        </div>
+      </button>
+
+      <!-- Lives Hearts -->
+      <div class="px-3 py-1.5 rounded-xl bg-red-950/70 border border-red-400/30 text-center">
+        <div class="text-[10px] uppercase tracking-wider text-red-200">Lives</div>
+        <div id="hud-lives" class="text-sm sm:text-base tracking-widest">
+          ❤️❤️❤️❤️❤️
+        </div>
+      </div>
+
+      <!-- Sound & Voice Toggle -->
+      <button id="btn-sound" onclick="toggleSound()" class="p-2.5 rounded-xl bg-indigo-950/80 hover:bg-indigo-900 border border-indigo-400/30 text-lg transition" title="Toggle Sound & Voice">
+        🔊
+      </button>
+    </div>
+  </header>
+
+  <!-- MAIN GAME STAGE -->
+  <main id="game-stage" class="w-full max-w-5xl grid grid-cols-1 lg:grid-cols-12 gap-4 z-10 my-auto">
+
+    <!-- LEFT / TOP PANEL: TARGET PERSON & RECIPE -->
+    <section class="lg:col-span-5 glass-panel rounded-2xl p-4 sm:p-5 flex flex-col justify-between">
+      <div>
+        <!-- Target Single Woman Card -->
+        <div class="rounded-xl bg-gradient-to-r from-pink-500/20 via-purple-500/20 to-cyan-500/20 border border-pink-400/30 p-3.5 mb-4">
+          <div class="flex items-center justify-between mb-1">
+            <span class="text-[11px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-400/30">
+              ✓ Mutual Consent Ready
+            </span>
+            <span class="text-xs text-purple-200" id="target-barangay">Siquijor Cove</span>
+          </div>
+          <div class="flex items-center gap-3 mt-2">
+            <div id="target-avatar" class="w-12 h-12 rounded-full bg-gradient-to-tr from-pink-500 to-amber-400 flex items-center justify-center text-2xl shadow-md shrink-0">
+              💃
+            </div>
+            <div>
+              <div class="text-xs text-pink-200">Target Single for Level <span id="card-level-num">1</span>:</div>
+              <h2 id="target-name" class="text-lg sm:text-xl font-extrabold text-white tracking-tight">
+                Loading...
+              </h2>
+              <p class="text-[11px] text-purple-200/80">
+                100% Unique Name • Never repeated in any level
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Countdown Timer Bar -->
+        <div class="mb-4">
+          <div class="flex justify-between items-center text-xs font-bold mb-1">
+            <span class="text-amber-300 flex items-center gap-1">⏳ Oras / Time Left:</span>
+            <span id="timer-text" class="text-base font-extrabold text-cyan-300">15.0s</span>
+          </div>
+          <div class="w-full h-3.5 bg-slate-900/90 rounded-full overflow-hidden border border-white/15 p-0.5">
+            <div id="timer-bar" class="h-full rounded-full bg-gradient-to-r from-emerald-400 via-amber-300 to-pink-500 transition-all duration-100" style="width: 100%;"></div>
+          </div>
+          <p class="text-[11px] text-purple-300/80 mt-1">
+            ⚠️ Kapag late ka o mali ang sunod na sangkap: <span class="text-red-400 font-bold">-1 LIFE!</span>
+          </p>
+        </div>
+
+        <!-- Required Potion Formula Sequence -->
+        <div>
+          <div class="flex items-center justify-between mb-2">
+            <h3 class="text-xs sm:text-sm font-extrabold uppercase tracking-wider text-amber-200">
+              📜 Tamang Formula (Exact Order):
+            </h3>
+            <span id="step-counter" class="text-xs font-bold text-cyan-300">Step 0 / 3</span>
+          </div>
+
+          <div id="recipe-sequence" class="flex flex-wrap gap-2 p-3 rounded-xl bg-black/35 border border-white/10 min-h-[76px] items-center">
+            <!-- Sequence slots injected dynamically -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Action Footer inside Left Card -->
+      <div class="mt-4 pt-3 border-t border-white/10 flex items-center justify-between gap-2 text-xs">
+        <button onclick="openRosterModal()" class="px-3 py-2 rounded-xl bg-pink-600/30 hover:bg-pink-600/50 border border-pink-400/40 text-pink-100 font-semibold transition">
+          💞 View Polyamory Roster (<span id="btn-roster-count">0</span>)
+        </button>
+        <button onclick="openHelpModal()" class="px-3 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-purple-100 font-semibold transition">
+          📖 Mechanics
+        </button>
+      </div>
+    </section>
+
+    <!-- CENTER / RIGHT PANEL: 2D POTION BOTTLE & INGREDIENTS -->
+    <section class="lg:col-span-7 glass-panel rounded-2xl p-4 sm:p-5 flex flex-col justify-between">
+
+      <!-- 2D Potion Bottle Stage -->
+      <div class="flex flex-col items-center justify-center py-2 relative">
+        <div class="text-xs uppercase tracking-widest text-pink-300 font-bold mb-2" id="potion-title">
+          ✨ Siquijor Gayuma Elixir ✨
+        </div>
+
+        <div id="bottle-wrapper" class="bottle-wrapper">
+          <div class="bottle-cork"></div>
+          <div class="bottle-neck"></div>
+          <div id="bottle-body" class="bottle-body">
+            <div id="potion-liquid" class="potion-liquid"></div>
+          </div>
+        </div>
+
+        <div id="brew-status-text" class="mt-3 text-xs sm:text-sm font-semibold text-cyan-200 text-center min-h-[20px]">
+          I-click ang tamang sangkap sa ibaba nang sunod-sunod!
+        </div>
+      </div>
+
+      <!-- Siquijor Ingredients Grid -->
+      <div class="mt-3">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-xs font-extrabold uppercase tracking-wider text-purple-200">
+            🌿 Mga Sangkap ng Siquijor (Tap Next Ingredient):
+          </span>
+          <span class="text-[11px] text-amber-300/90">Mabilisan!</span>
+        </div>
+
+        <div id="ingredients-grid" class="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+          <!-- Ingredient buttons injected dynamically -->
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="w-full max-w-5xl text-center text-[11px] text-purple-300/60 mt-3 z-10">
+    Daniela Love Potion for Siquijor • 100 Levels • Consensual Polyamory Adventure • Zero Repeated Names
+  </footer>
+
+  <!-- ========================================================= -->
+  <!-- START / WELCOME OVERLAY MODAL -->
+  <!-- ========================================================= -->
+  <div id="modal-start" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
+    <div class="glass-panel max-w-lg w-full rounded-3xl p-6 sm:p-8 text-center border-2 border-pink-400/40">
+      <div class="text-5xl mb-3">🧪💖🏝️</div>
+      <h2 class="font-mystic text-2xl sm:text-3xl font-black bg-gradient-to-r from-pink-300 via-amber-200 to-cyan-300 bg-clip-text text-transparent mb-2">
+        Daniela Love Potion for Siquijor
+      </h2>
+      <p class="text-xs sm:text-sm text-purple-100/90 leading-relaxed mb-4">
+        Maligayang pagdating sa mahiwagang isla ng <strong>Siquijor</strong>! Ang goal mo ay makumpleto ang <strong>Level 1 hanggang Level 100</strong> bago ang grand <strong>Congratulations!</strong>
+      </p>
+
+      <div class="text-left bg-black/40 rounded-2xl p-4 border border-white/10 text-xs sm:text-sm space-y-2 mb-6 text-purple-100">
+        <div class="flex items-start gap-2">
+          <span>💞</span>
+          <span><strong>Consensual Polyamory (1–100):</strong> Bawat level ay may bagong single na babae na may mutual consent para mapabilang sa iyong consensual polyamorous relationship.</span>
+        </div>
+        <div class="flex items-start gap-2">
+          <span>📛</span>
+          <span><strong>100% Unique Female Names:</strong> Kapag nabanggit na ang pangalan sa past level, <strong>hindi na ito mauulit</strong> sa susunod na levels!</span>
+        </div>
+        <div class="flex items-start gap-2">
+          <span>⚡</span>
+          <span><strong>Mabilisan & Tamang Formula:</strong> Sundin ang exact order ng mga sangkap bago maubos ang oras. Kapag late o mali ang sangkap: <strong>-1 LIFE</strong>!</span>
+        </div>
+      </div>
+
+      <button onclick="startNewGame()" class="w-full py-3.5 px-6 rounded-2xl font-extrabold text-base sm:text-lg bg-gradient-to-r from-pink-500 via-purple-600 to-cyan-500 hover:brightness-110 text-white shadow-xl shadow-pink-500/30 transition transform active:scale-95 cursor-pointer">
+        ✨ Simulan ang Level 1 (Start Brewing)
+      </button>
+    </div>
+  </div>
+
+  <!-- ========================================================= -->
+  <!-- LEVEL CLEAR / CONSENT CELEBRATION MODAL -->
+  <!-- ========================================================= -->
+  <div id="modal-level-clear" class="hidden fixed inset-0 z-50 bg-black/75 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="glass-panel max-w-md w-full rounded-3xl p-6 text-center border-2 border-emerald-400/50">
+      <div class="text-5xl mb-2">💖✨🥂</div>
+      <div class="inline-block px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-300 text-xs font-bold mb-2">
+        POTION EFFECTIVE • LEVEL <span id="clear-level-num">1</span> CLEARED!
+      </div>
+      <h3 class="text-xl sm:text-2xl font-extrabold text-white mb-1">
+        Consensual Match Unlocked!
+      </h3>
+      <p class="text-sm text-pink-200 font-semibold mb-3">
+        Si <span id="clear-partner-name" class="text-amber-300 underline"></span> ay masayang sumali sa iyong consensual polyamory relationship!
+      </p>
+      <div class="bg-black/35 rounded-xl p-3 text-xs text-purple-200 mb-5">
+        Total Consensual Partners: <strong class="text-pink-300 text-sm"><span id="clear-total-partners">1</span> / 100</strong>
+      </div>
+      <button onclick="proceedNextLevel()" class="w-full py-3 px-5 rounded-2xl font-extrabold text-base bg-gradient-to-r from-emerald-400 to-cyan-500 text-slate-950 hover:brightness-110 shadow-lg transition cursor-pointer">
+        Next Level (<span id="next-level-btn-num">2</span>) ➡️
+      </button>
+    </div>
+  </div>
+
+  <!-- ========================================================= -->
+  <!-- GAME OVER MODAL -->
+  <!-- ========================================================= -->
+  <div id="modal-gameover" class="hidden fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4">
+    <div class="glass-panel max-w-md w-full rounded-3xl p-6 sm:p-8 text-center border-2 border-red-500/50">
+      <div class="text-5xl mb-3">💔🧪🥀</div>
+      <h2 class="font-mystic text-2xl sm:text-3xl font-black text-red-400 mb-2">
+        Ubos na ang Lives!
+      </h2>
+      <p class="text-sm text-purple-100 mb-4">
+        Nakaabot ka hanggang <strong>Level <span id="go-level">1</span></strong> at nakabuo ng <strong><span id="go-partners">0</span></strong> consensual polyamory relationships.
+      </p>
+      <button onclick="startNewGame()" class="w-full py-3.5 px-6 rounded-2xl font-extrabold text-base bg-gradient-to-r from-pink-500 to-red-500 text-white hover:brightness-110 shadow-lg transition cursor-pointer">
+        🔄 Subukan Muli (Restart Level 1)
+      </button>
+    </div>
+  </div>
+
+  <!-- ========================================================= -->
+  <!-- LEVEL 100 GRAND CONGRATULATIONS VICTORY MODAL -->
+  <!-- ========================================================= -->
+  <div id="modal-victory" class="hidden fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4">
+    <div class="glass-panel max-w-xl w-full rounded-3xl p-6 sm:p-8 text-center border-2 border-amber-300/70 shadow-2xl shadow-amber-400/20">
+      <div class="text-6xl mb-3">👑🎉💞🏆</div>
+      <h2 class="font-mystic text-2xl sm:text-4xl font-black bg-gradient-to-r from-amber-200 via-pink-300 to-cyan-300 bg-clip-text text-transparent mb-2">
+        CONGRATULATIONS!
+      </h2>
+      <p class="text-sm sm:text-base text-amber-100 font-semibold mb-3">
+        Natapos mo ang lahat ng <strong>Level 1 hanggang Level 100</strong> ng Daniela Love Potion for Siquijor!
+      </p>
+      <p class="text-xs sm:text-sm text-purple-200 mb-5">
+        Lahat ng <strong>100 unique consensual single women</strong> ay matagumpay mong nakuha ang loob nang may buong respeto at mutual consent, nang walang naulit na pangalan!
+      </p>
+      <div class="flex flex-col sm:flex-row gap-3">
+        <button onclick="openRosterModal()" class="flex-1 py-3 px-4 rounded-2xl font-bold text-sm bg-pink-600 hover:bg-pink-500 text-white transition cursor-pointer">
+          💞 Tingnan ang 100 Partners
+        </button>
+        <button onclick="startNewGame()" class="flex-1 py-3 px-4 rounded-2xl font-bold text-sm bg-gradient-to-r from-amber-400 to-pink-500 text-slate-950 transition cursor-pointer">
+          🔄 Play Again (Level 1–100)
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================= -->
+  <!-- CONSENSUAL POLYAMORY ROSTER MODAL -->
+  <!-- ========================================================= -->
+  <div id="modal-roster" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="glass-panel max-w-2xl w-full rounded-3xl p-5 sm:p-6 border border-pink-400/40 flex flex-col max-h-[85vh]">
+      <div class="flex items-center justify-between pb-3 border-b border-white/15">
+        <div>
+          <h3 class="text-lg sm:text-xl font-extrabold text-pink-300">
+            💞 Consensual Polyamory Roster (<span id="roster-modal-count">0</span> / 100)
+          </h3>
+          <p class="text-xs text-purple-200">Lahat ng unique names na may mutual consent mula Level 1–100</p>
+        </div>
+        <button onclick="closeRosterModal()" class="w-9 h-9 rounded-full bg-white/10 hover:bg-white/20 text-white font-bold cursor-pointer">✕</button>
+      </div>
+
+      <div id="roster-list" class="my-4 overflow-y-auto grid grid-cols-1 sm:grid-cols-2 gap-2 pr-1">
+        <!-- Partner items injected here -->
+      </div>
+
+      <div class="pt-2 border-t border-white/10 flex justify-between items-center text-xs text-purple-300">
+        <span>Zero duplicate names guaranteed</span>
+        <button onclick="closeRosterModal()" class="px-4 py-2 rounded-xl bg-pink-600 text-white font-bold cursor-pointer">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================= -->
+  <!-- MECHANICS / HELP MODAL -->
+  <!-- ========================================================= -->
+  <div id="modal-help" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="glass-panel max-w-md w-full rounded-3xl p-6 border border-cyan-400/40">
+      <div class="flex items-center justify-between mb-3">
+        <h3 class="text-lg font-extrabold text-cyan-300">📖 Game Mechanics</h3>
+        <button onclick="closeHelpModal()" class="w-8 h-8 rounded-full bg-white/10 text-white font-bold cursor-pointer">✕</button>
+      </div>
+      <ul class="text-xs sm:text-sm text-purple-100 space-y-2.5 mb-5">
+        <li>• <strong>Goal:</strong> Tapusin ang <strong>Level 1 hanggang Level 100</strong> bago ang grand Congratulations screen.</li>
+        <li>• <strong>1–100 Consensual Polyamory:</strong> Bawat level ay may 1 bagong single na babae na may mutual consent.</li>
+        <li>• <strong>No Repeated Names:</strong> Lahat ng pangalan ng babae ay random at strictly tracked—hindi na mauulit ang past names sa susunod na levels.</li>
+        <li>• <strong>Mabilisan & Tamang Sangkap:</strong> I-click ang mga sangkap sa tamang pagkakasunod-sunod bago maubos ang timer.</li>
+        <li>• <strong>Penalty:</strong> Kapag late ka o maling sangkap ang pinindot, mabawasan ka ng <strong>-1 Life</strong> at magre-reset ang timpla sa kasalukuyang level.</li>
+      </ul>
+      <button onclick="closeHelpModal()" class="w-full py-2.5 rounded-xl bg-cyan-500 text-slate-950 font-extrabold cursor-pointer">
+        Got it! Back to Game
+      </button>
+    </div>
+  </div>
+
+  <script>
+    /* ==========================================================================
+       1. STRICTLY UNIQUE POOL OF 160+ FEMALE NAMES (NEVER REPEATED ACROSS LEVELS)
+       ========================================================================== */
+    const MASTER_FEMALE_NAMES = [
+      "Daniela", "Bea", "Camille", "Clarissa", "Erika", "Faye", "Gizelle", "Hannah", "Irish", "Jasmine",
+      "Katrina", "Lorraine", "Marisol", "Nadine", "Odessa", "Pauline", "Queenie", "Rina", "Sabrina", "Trisha",
+      "Ursula", "Vanessa", "Wendy", "Xandra", "Ysabel", "Zaira", "Abigail", "Bianca", "Cassandra", "Denise",
+      "Elaine", "Francine", "Gabrielle", "Hazel", "Isabel", "Janelle", "Kristine", "Liezel", "Monique", "Nicole",
+      "Olivia", "Patricia", "Rica", "Stephanie", "Theresa", "Valerie", "Winnie", "Yvette", "Zoe", "Althea",
+      "Bernadette", "Celine", "Dianne", "Estelle", "Fiona", "Gemma", "Heidi", "Ivy", "Jocelyn", "Kyla",
+      "Liza", "Mikaela", "Noemi", "Ophelia", "Precious", "Rosalie", "Samantha", "Tricia", "Veronica", "Xyza",
+      "Yna", "Zelene", "Andrea", "Bridget", "Chantal", "Daphne", "Eloisa", "Fatima", "Graciela", "Helga",
+      "Ingrid", "Juliana", "Keisha", "Leila", "Marianne", "Natasha", "Oriana", "Phoebe", "Reina", "Selena",
+      "Tatiana", "Vina", "Wilma", "Xenia", "Yolanda", "Zandra", "Aileen", "Belinda", "Carmela", "Desiree",
+      "Evangeline", "Felicity", "Glenda", "Harriet", "Imelda", "Joanna", "Karen", "Lorena", "Melissa", "Nerissa",
+      "Octavia", "Penelope", "Roxanne", "Sheila", "Tanya", "Vivian", "Winona", "Yasmine", "Zenaida", "Amara",
+      "Bettina", "Corazon", "Dolores", "Esmeralda", "Flora", "Giselle", "Helena", "Irene", "Jessa", "Kirsten",
+      "Lucia", "Miriam", "Nadia", "Ofelia", "Priscilla", "Rowena", "Serena", "Teresa", "Victoria", "Zarah",
+      "Angelica", "Beverly", "Celeste", "Danica", "Evelyn", "Freya", "Gretchen", "Heart", "Iza", "Jolina",
+      "Kaye", "Lovely", "Maymay", "Neri", "Pia", "Ruffa", "Solenn", "Toni", "Vicki", "Yam"
+    ];
+
+    const SIQUIJOR_SPOTS = [
+      "Salagdoong Beach", "Cambugahay Falls", "Paliton Sunset Cove", "Lazi Convent",
+      "Mt. Bandilaan Peak", "Tubod Marine Sanctuary", "Cantabon Cave", "Guiwanon Spring Park",
+      "San Juan Cliffside", "Capilay Spring"
+    ];
+
+    const AVATAR_EMOJIS = ["💃", "👩🏻", "👩🏽", "🧜‍♀️", "🧚‍♀️", "👸🏻", "🌸", "🌺", "✨", "🦋"];
+
+    /* ==========================================================================
+       2. SIQUIJOR MYSTICAL POTION INGREDIENTS
+       ========================================================================== */
+    const INGREDIENTS = [
+      { id: "gayuma", name: "Gayuma Herb", icon: "🌿", color: "#2ec4b6" },
+      { id: "hibiscus", name: "Pink Gumamela", icon: "🌺", color: "#ff3e9d" },
+      { id: "moonwater", name: "Full Moon Dew", icon: "💧", color: "#00bbf9" },
+      { id: "ylang", name: "Ylang-Ylang Oil", icon: "🌼", color: "#ffd166" },
+      { id: "dalakit", name: "Dalakit Leaf", icon: "🍃", color: "#06d6a0" },
+      { id: "honey", name: "Mystic Honey", icon: "🍯", color: "#f77f00" },
+      { id: "stardust", name: "Siquijor Stardust", icon: "✨", color: "#c77dff" },
+      { id: "pearl", name: "Mutya Pearl", icon: "🔮", color: "#ff70a6" }
+    ];
+
+    /* ==========================================================================
+       3. GAME STATE
+       ========================================================================== */
+    const MAX_LEVEL = 100;
+    const INITIAL_LIVES = 5;
+
+    let state = {
+      level: 1,
+      lives: INITIAL_LIVES,
+      usedNames: new Set(),       // Tracks every name used so it NEVER repeats
+      consensualRoster: [],       // Array of { level, name, spot, avatar }
+      currentTarget: null,
+      targetRecipe: [],           // Array of ingredient objects
+      currentStep: 0,
+      timeLimit: 15,
+      timeRemaining: 15,
+      timerInterval: null,
+      isPlaying: false,
+      soundEnabled: true
+    };
+
+    /* ==========================================================================
+       4. WEB AUDIO & VOICE SYNTHESIS (ZERO EXTERNAL ASSETS NEEDED)
+       ========================================================================== */
+    let audioCtx = null;
+
+    function ensureAudio() {
+      if (!audioCtx) {
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        if (AudioContext) audioCtx = new AudioContext();
+      }
+      if (audioCtx && audioCtx.state === "suspended") {
+        audioCtx.resume();
+      }
+    }
+
+    function playTone(freq, type = "sine", duration = 0.18, volume = 0.16) {
+      if (!state.soundEnabled) return;
+      try {
+        ensureAudio();
+        if (!audioCtx) return;
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = type;
+        osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+        gain.gain.setValueAtTime(volume, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + duration);
+      } catch (e) {
+        // Ignore audio block errors
+      }
+    }
+
+    function playBubbleSound(stepIndex) {
+      const baseFreq = 380 + stepIndex * 95;
+      playTone(baseFreq, "sine", 0.2, 0.18);
+      setTimeout(() => playTone(baseFreq * 1.25, "triangle", 0.15, 0.12), 60);
+    }
+
+    function playErrorSound() {
+      playTone(150, "sawtooth", 0.35, 0.22);
+      setTimeout(() => playTone(110, "sawtooth", 0.35, 0.22), 110);
+    }
+
+    function playSuccessSound() {
+      const notes = [523.25, 659.25, 783.99, 1046.50];
+      notes.forEach((n, idx) => {
+        setTimeout(() => playTone(n, "triangle", 0.28, 0.18), idx * 85);
+      });
+    }
+
+    function speakText(text) {
+      if (!state.soundEnabled || !("speechSynthesis" in window)) return;
+      try {
+        window.speechSynthesis.cancel();
+        const utter = new SpeechSynthesisUtterance(text);
+        utter.rate = 1.12;
+        utter.pitch = 1.15;
+        utter.volume = 0.85;
+        window.speechSynthesis.speak(utter);
+      } catch (e) {
+        // Fallback silently if speech synthesis unavailable
+      }
+    }
+
+    function toggleSound() {
+      state.soundEnabled = !state.soundEnabled;
+      document.getElementById("btn-sound").textContent = state.soundEnabled ? "🔊" : "🔇";
+      if (state.soundEnabled) playTone(520, "sine", 0.15);
+    }
+
+    /* ==========================================================================
+       5. AMBIENT FIREFLIES & VISUAL EFFECTS
+       ========================================================================== */
+    function initFireflies() {
+      const container = document.getElementById("fireflies-container");
+      container.innerHTML = "";
+      for (let i = 0; i < 22; i++) {
+        const dot = document.createElement("div");
+        dot.className = "firefly";
+        dot.style.left = `${Math.random() * 100}vw`;
+        dot.style.animationDuration = `${7 + Math.random() * 10}s`;
+        dot.style.animationDelay = `${Math.random() * 8}s`;
+        container.appendChild(dot);
+      }
+    }
+
+    function showFloatingAlert(text, colorClass = "text-red-400") {
+      const alertEl = document.createElement("div");
+      alertEl.className = `floating-alert ${colorClass}`;
+      alertEl.textContent = text;
+      document.body.appendChild(alertEl);
+      setTimeout(() => alertEl.remove(), 1100);
+    }
+
+    function spawnBottleBubbles(color) {
+      const body = document.getElementById("bottle-body");
+      for (let i = 0; i < 6; i++) {
+        const b = document.createElement("div");
+        b.className = "bubble";
+        const size = 6 + Math.random() * 10;
+        b.style.width = `${size}px`;
+        b.style.height = `${size}px`;
+        b.style.left = `${18 + Math.random() * 110}px`;
+        b.style.background = color || "rgba(255,255,255,0.75)";
+        b.style.animationDuration = `${1.1 + Math.random() * 0.9}s`;
+        body.appendChild(b);
+        setTimeout(() => b.remove(), 1800);
+      }
+    }
+
+    /* ==========================================================================
+       6. NON-REPEATING NAME PICKER & RECIPE GENERATOR
+       ========================================================================== */
+    function pickUniqueFemaleName() {
+      const available = MASTER_FEMALE_NAMES.filter(name => !state.usedNames.has(name));
+      if (available.length === 0) {
+        // Fallback safety if somehow exceeded
+        const fallback = `Siquijor Maiden #${state.usedNames.size + 1}`;
+        state.usedNames.add(fallback);
+        return fallback;
+      }
+      const randomIndex = Math.floor(Math.random() * available.length);
+      const chosen = available[randomIndex];
+      state.usedNames.add(chosen);
+      return chosen;
+    }
+
+    function generateRecipeForLevel(level) {
+      // Scale formula length smoothly from 3 ingredients (Lv 1-10) up to 7 ingredients (Lv 81-100)
+      let length = 3;
+      if (level >= 11 && level <= 25) length = 4;
+      else if (level >= 26 && level <= 50) length = 5;
+      else if (level >= 51 && level <= 80) length = 6;
+      else if (level >= 81) length = 7;
+
+      const recipe = [];
+      for (let i = 0; i < length; i++) {
+        const randIng = INGREDIENTS[Math.floor(Math.random() * INGREDIENTS.length)];
+        recipe.push(randIng);
+      }
+      return recipe;
+    }
+
+    function getTimeLimitForLevel(level, recipeLength) {
+      // Fast-paced countdown: enough seconds to click quickly, tighter as levels climb
+      const baseTime = 8 + recipeLength * 2.1;
+      const levelPenalty = Math.min(5.5, (level - 1) * 0.055);
+      return Math.max(6.5, Number((baseTime - levelPenalty).toFixed(1)));
+    }
+
+    /* ==========================================================================
+       7. CORE GAME FLOW
+       ========================================================================== */
+    function startNewGame() {
+      ensureAudio();
+      clearInterval(state.timerInterval);
+
+      state.level = 1;
+      state.lives = INITIAL_LIVES;
+      state.usedNames = new Set();
+      state.consensualRoster = [];
+      state.isPlaying = true;
+
+      // Hide all modals
+      document.getElementById("modal-start").classList.add("hidden");
+      document.getElementById("modal-gameover").classList.add("hidden");
+      document.getElementById("modal-victory").classList.add("hidden");
+      document.getElementById("modal-level-clear").classList.add("hidden");
+
+      renderIngredientsGrid();
+      setupLevel(1);
+      speakText("Level 1! Brew the love potion fast!");
+    }
+
+    function setupLevel(levelNum) {
+      clearInterval(state.timerInterval);
+      state.level = levelNum;
+      state.currentStep = 0;
+      state.isPlaying = true;
+
+      // Pick strictly unused female name
+      const uniqueName = pickUniqueFemaleName();
+      const spot = SIQUIJOR_SPOTS[(levelNum - 1) % SIQUIJOR_SPOTS.length];
+      const avatar = AVATAR_EMOJIS[(levelNum - 1) % AVATAR_EMOJIS.length];
+
+      state.currentTarget = {
+        level: levelNum,
+        name: uniqueName,
+        spot: spot,
+        avatar: avatar
+      };
+
+      // Generate recipe & timer
+      state.targetRecipe = generateRecipeForLevel(levelNum);
+      state.timeLimit = getTimeLimitForLevel(levelNum, state.targetRecipe.length);
+      state.timeRemaining = state.timeLimit;
+
+      // Update UI
+      updateHUD();
+      updateTargetCard();
+      renderRecipeSequence();
+      resetBottleVisuals();
+      document.getElementById("brew-status-text").textContent =
+        `I-click ang 1st sangkap para kay ${uniqueName}!`;
+
+      startLevelTimer();
+    }
+
+    function startLevelTimer() {
+      clearInterval(state.timerInterval);
+      const tickMs = 100;
+
+      state.timerInterval = setInterval(() => {
+        if (!state.isPlaying) return;
+
+        state.timeRemaining = Math.max(0, state.timeRemaining - tickMs / 1000);
+        updateTimerUI();
+
+        if (state.timeRemaining <= 0) {
+          handleMistakeOrTimeout("⏰ NAUBOS ANG ORAS! -1 LIFE");
+        }
+      }, tickMs);
+    }
+
+    function handleIngredientClick(ingredientId) {
+      if (!state.isPlaying) return;
+      ensureAudio();
+
+      const expected = state.targetRecipe[state.currentStep];
+      if (!expected) return;
+
+      if (ingredientId === expected.id) {
+        // Correct ingredient!
+        state.currentStep++;
+        playBubbleSound(state.currentStep);
+        updateBottleFill(expected.color);
+        renderRecipeSequence();
+        updateStepCounter();
+
+        // Check if potion is complete
+        if (state.currentStep >= state.targetRecipe.length) {
+          handleLevelSuccess();
+        } else {
+          const nextIng = state.targetRecipe[state.currentStep];
+          document.getElementById("brew-status-text").textContent =
+            `Tama! Susunod: ${nextIng.icon} ${nextIng.name}`;
+        }
+      } else {
+        // Wrong ingredient!
+        handleMistakeOrTimeout("❌ MALING SANGKAP! -1 LIFE");
+      }
+    }
+
+    function handleMistakeOrTimeout(reasonText) {
+      clearInterval(state.timerInterval);
+      state.isPlaying = false;
+      state.lives = Math.max(0, state.lives - 1);
+
+      playErrorSound();
+      showFloatingAlert(reasonText, "text-red-400");
+
+      const stage = document.getElementById("game-stage");
+      stage.classList.remove("shake-error");
+      void stage.offsetWidth; // trigger reflow
+      stage.classList.add("shake-error");
+
+      updateHUD();
+
+      if (state.lives <= 0) {
+        setTimeout(() => {
+          document.getElementById("go-level").textContent = state.level;
+          document.getElementById("go-partners").textContent = state.consensualRoster.length;
+          document.getElementById("modal-gameover").classList.remove("hidden");
+          speakText("Game over! Out of lives.");
+        }, 650);
+      } else {
+        // Reset current bottle & timer for this same level so player can retry fast
+        document.getElementById("brew-status-text").textContent =
+          "⚠️ Nag-reset ang bote! Bilisan mo ulit sa level na ito!";
+        setTimeout(() => {
+          state.currentStep = 0;
+          state.timeRemaining = state.timeLimit;
+          state.isPlaying = true;
+          resetBottleVisuals();
+          renderRecipeSequence();
+          updateTimerUI();
+          startLevelTimer();
+        }, 650);
+      }
+    }
+
+    function handleLevelSuccess() {
+      clearInterval(state.timerInterval);
+      state.isPlaying = false;
+      playSuccessSound();
+      showFloatingAlert("💖 EFFECTIVE POTION!", "text-emerald-300");
+
+      // Record consensual polyamory match
+      state.consensualRoster.push({ ...state.currentTarget });
+      updateHUD();
+
+      if (state.level >= MAX_LEVEL) {
+        // GRAND LEVEL 100 CONGRATULATIONS!
+        setTimeout(() => {
+          document.getElementById("modal-victory").classList.remove("hidden");
+          speakText("Congratulations! You completed all 100 levels of Daniela Love Potion for Siquijor!");
+        }, 600);
+      } else {
+        // Show Level Clear & Consent Modal
+        setTimeout(() => {
+          document.getElementById("clear-level-num").textContent = state.level;
+          document.getElementById("clear-partner-name").textContent = state.currentTarget.name;
+          document.getElementById("clear-total-partners").textContent = state.consensualRoster.length;
+          document.getElementById("next-level-btn-num").textContent = state.level + 1;
+          document.getElementById("modal-level-clear").classList.remove("hidden");
+          speakText(`Potion effective for ${state.currentTarget.name}!`);
+        }, 500);
+      }
+    }
+
+    function proceedNextLevel() {
+      document.getElementById("modal-level-clear").classList.add("hidden");
+      setupLevel(state.level + 1);
+    }
+
+    /* ==========================================================================
+       8. UI RENDERING HELPERS
+       ========================================================================== */
+    function updateHUD() {
+      document.getElementById("hud-level").textContent = state.level;
+      document.getElementById("hud-partners").textContent = state.consensualRoster.length;
+      document.getElementById("btn-roster-count").textContent = state.consensualRoster.length;
+
+      const hearts = "❤️".repeat(state.lives) + "🖤".repeat(Math.max(0, INITIAL_LIVES - state.lives));
+      document.getElementById("hud-lives").textContent = hearts;
+    }
+
+    function updateTargetCard() {
+      document.getElementById("card-level-num").textContent = state.level;
+      document.getElementById("target-name").textContent = state.currentTarget.name;
+      document.getElementById("target-barangay").textContent = `🏝️ ${state.currentTarget.spot}`;
+      document.getElementById("target-avatar").textContent = state.currentTarget.avatar;
+      document.getElementById("potion-title").textContent =
+        `✨ Gayuma Potion for ${state.currentTarget.name} ✨`;
+    }
+
+    function updateTimerUI() {
+      const pct = Math.max(0, (state.timeRemaining / state.timeLimit) * 100);
+      const bar = document.getElementById("timer-bar");
+      const text = document.getElementById("timer-text");
+
+      bar.style.width = `${pct}%`;
+      text.textContent = `${state.timeRemaining.toFixed(1)}s`;
+
+      if (pct <= 30) {
+        text.className = "text-base font-extrabold text-red-400 animate-pulse";
+      } else if (pct <= 60) {
+        text.className = "text-base font-extrabold text-amber-300";
+      } else {
+        text.className = "text-base font-extrabold text-cyan-300";
+      }
+    }
+
+    function updateStepCounter() {
+      document.getElementById("step-counter").textContent =
+        `Step ${state.currentStep} / ${state.targetRecipe.length}`;
+    }
+
+    function renderRecipeSequence() {
+      const container = document.getElementById("recipe-sequence");
+      container.innerHTML = "";
+      updateStepCounter();
+
+      state.targetRecipe.forEach((ing, idx) => {
+        const isDone = idx < state.currentStep;
+        const isCurrent = idx === state.currentStep;
+
+        const chip = document.createElement("div");
+        chip.className = [
+          "flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl text-xs font-bold border transition-all",
+          isDone
+            ? "bg-emerald-500/25 border-emerald-400 text-emerald-200 line-through opacity-75"
+            : isCurrent
+            ? "bg-pink-500/30 border-pink-400 text-white scale-105 shadow-md shadow-pink-500/30 ring-2 ring-pink-400/60"
+            : "bg-white/5 border-white/15 text-purple-200/80"
+        ].join(" ");
+
+        chip.innerHTML = `
+          <span class="text-[10px] opacity-75">${idx + 1}.</span>
+          <span class="text-base">${ing.icon}</span>
+          <span>${ing.name}</span>
+          ${isDone ? "<span>✓</span>" : ""}
+        `;
+        container.appendChild(chip);
+      });
+    }
+
+    function renderIngredientsGrid() {
+      const grid = document.getElementById("ingredients-grid");
+      grid.innerHTML = "";
+
+      INGREDIENTS.forEach(ing => {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "ingredient-btn rounded-2xl p-2.5 sm:p-3 flex flex-col items-center justify-center text-center cursor-pointer";
+        btn.onclick = () => handleIngredientClick(ing.id);
+        btn.innerHTML = `
+          <span class="text-2xl sm:text-3xl mb-1 drop-shadow">${ing.icon}</span>
+          <span class="text-xs font-bold text-white leading-tight">${ing.name}</span>
+        `;
+        grid.appendChild(btn);
+      });
+    }
+
+    function resetBottleVisuals() {
+      const liquid = document.getElementById("potion-liquid");
+      liquid.style.height = "0%";
+      liquid.style.background = "linear-gradient(180deg, #ff70b8 0%, #ff1e8a 55%, #7b2cbf 100%)";
+    }
+
+    function updateBottleFill(latestColor) {
+      const pct = Math.min(100, Math.round((state.currentStep / state.targetRecipe.length) * 100));
+      const liquid = document.getElementById("potion-liquid");
+      const wrapper = document.getElementById("bottle-wrapper");
+
+      liquid.style.height = `${pct}%`;
+      liquid.style.background = `linear-gradient(180deg, ${latestColor} 0%, #ff3e9d 55%, #7b2cbf 100%)`;
+
+      wrapper.classList.remove("pulse-brew");
+      void wrapper.offsetWidth;
+      wrapper.classList.add("pulse-brew");
+
+      spawnBottleBubbles(latestColor);
+    }
+
+    /* ==========================================================================
+       9. ROSTER & HELP MODALS
+       ========================================================================== */
+    function openRosterModal() {
+      const list = document.getElementById("roster-list");
+      document.getElementById("roster-modal-count").textContent = state.consensualRoster.length;
+      list.innerHTML = "";
+
+      if (state.consensualRoster.length === 0) {
+        list.innerHTML = `
+          <div class="col-span-full text-center py-8 text-sm text-purple-300">
+            Wala pang consensual partner sa roster. Tapusin ang Level 1 para magsimula!
+          </div>
+        `;
+      } else {
+        state.consensualRoster.forEach(person => {
+          const item = document.createElement("div");
+          item.className = "flex items-center justify-between p-2.5 rounded-xl bg-white/5 border border-pink-400/25";
+          item.innerHTML = `
+            <div class="flex items-center gap-2.5">
+              <span class="text-xl">${person.avatar}</span>
+              <div>
+                <div class="text-xs sm:text-sm font-bold text-white">${person.name}</div>
+                <div class="text-[11px] text-purple-300">Level ${person.level} • ${person.spot}</div>
+              </div>
+            </div>
+            <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-400/30">
+              Consented ✓
+            </span>
+          `;
+          list.appendChild(item);
+        });
+      }
+
+      document.getElementById("modal-roster").classList.remove("hidden");
+    }
+
+    function closeRosterModal() {
+      document.getElementById("modal-roster").classList.add("hidden");
+    }
+
+    function openHelpModal() {
+      document.getElementById("modal-help").classList.remove("hidden");
+    }
+
+    function closeHelpModal() {
+      document.getElementById("modal-help").classList.add("hidden");
+    }
+
+    /* ==========================================================================
+       10. BOOTSTRAP ON WINDOW LOAD
+       ========================================================================== */
+    window.onload = function () {
+      initFireflies();
+      renderIngredientsGrid();
+    };
+  </script>
+</body>
+</html>
